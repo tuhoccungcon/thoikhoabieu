@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thời Khóa Biểu – Sori</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --orange: #F97316;
+    --orange-light: #FFF7ED;
+    --cream: #FFFBEB;
+    --green: #10B981;
+    --green-light: #ECFDF5;
+    --text: #1E293B;
+    --muted: #64748B;
+    --border: #E2E8F0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--cream);
+    color: var(--text);
+    padding: 16px;
+    line-height: 1.4;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .header-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.08);
+    border: 2px solid #DBEAFE;
+    margin-bottom: 18px;
+  }
+
+  .header-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.5rem;
+    color: var(--blue);
+  }
+
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.88rem;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1.5px solid #BFDBFE;
+    background: var(--blue-light);
+    color: var(--blue);
+    cursor: pointer;
+    transition: transform 0.12s, background 0.2s;
+  }
+
+  .btn:hover { background: #DBEAFE; }
+  .btn:active { transform: scale(0.95); }
+
+  .btn-today {
+    background: var(--orange-light);
+    color: var(--orange);
+    border-color: #FED7AA;
+  }
+
+  .week-label {
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: var(--text);
+    padding: 0 6px;
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    min-width: 180px;
+    height: 18px;
+    background: #E2E8F0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3B82F6, #10B981);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  .star-badge {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    background: #FEF3C7;
+    color: #B45309;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1.5px solid #FDE68A;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+  }
+
+  .day-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 15px;
+    border: 2px solid var(--border);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .day-card.today {
+    border-color: var(--orange);
+    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.14);
+  }
+
+  .day-card.all-done {
+    border-color: var(--green);
+    background: #FAFFFD;
+  }
+
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 9px;
+    border-bottom: 1.5px dashed var(--border);
+  }
+
+  .day-title {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.12rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .day-date {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .today-pill {
+    font-size: 0.7rem;
+    background: var(--orange);
+    color: #FFFFFF;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  .day-count {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--muted);
+  }
+
+  .day-card.all-done .day-count { color: var(--green); }
+
+  .task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #F8FAFC;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .task-item:hover {
+    background: var(--blue-light);
+    border-color: #BFDBFE;
+  }
+
+  .task-item.done {
+    background: var(--green-light);
+    border-color: #A7F3D0;
+  }
+
+  .task-item.syncing {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    margin-top: 2px;
+    border-radius: 8px;
+    border: 2px solid #94A3B8;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    color: transparent;
+  }
+
+  .task-item.done .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+    color: #FFFFFF;
+  }
+
+  .task-content { flex: 1; min-width: 0; }
+
+  .task-time {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--blue);
+    display: block;
+  }
+
+  .task-item.done .task-time { color: var(--green); }
+
+  .task-text {
+    font-size: 0.96rem;
+    font-weight: 800;
+    word-wrap: break-word;
+  }
+
+  .task-item.done .task-text {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .task-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    background: var(--orange);
+    padding: 4px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  .task-link:hover { background: #EA580C; }
+
+  .empty-note {
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    padding: 16px 0;
+  }
+
+  .status-box {
+    text-align: center;
+    padding: 36px 16px;
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 2px dashed #BFDBFE;
+    font-weight: 700;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1E293B;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.25s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div class="header-top">
+      <h1>📅 Lịch Học Của Sori</h1>
+      <div class="week-nav">
+        <button class="btn" onclick="changeWeek(-1)">◀ Tuần trước</button>
+        <span class="week-label" id="weekLabel">...</span>
+        <button class="btn" onclick="changeWeek(1)">Tuần sau ▶</button>
+        <button class="btn btn-today" onclick="goToday()">Hôm nay</button>
+        <button class="btn" title="Tải lại từ Google Calendar" onclick="loadWeek()">🔄</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="star-badge" id="starBadge">⭐ 0 / 0 hoàn thành</div>
+    </div>
+  </div>
+
+  <div id="contentArea" class="status-box">⏳ Đang tải lịch từ Google Calendar...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // DÁN ĐƯỜNG LINK WEB APP (/exec) TỪ BƯỚC 1 VÀO GIỮA HAI DẤU NHÁY ĐƠN DƯỚI ĐÂY:
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyNdc0emp33A123O1J0Ex5RAZAfmDxhRv56LHd3i1euLs0AcpNIlgPhNnWA74Dhw9j7aw/exec';
+
+  let weekOffset = 0;
+  let currentData = null;
+  let toastTimer = null;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  function changeWeek(delta) {
+    weekOffset += delta;
+    loadWeek();
+  }
+
+  function goToday() {
+    weekOffset = 0;
+    loadWeek();
+  }
+
+  async function loadWeek() {
+    const area = document.getElementById('contentArea');
+    if (!API_URL || API_URL.includes('DÁN_LINK')) {
+      area.className = 'status-box';
+      area.innerHTML = '⚠️ Bạn chưa dán đường link <b>API_URL</b> vào file <code>index.html</code>.';
+      return;
+    }
+
+    area.className = 'status-box';
+    area.textContent = '⏳ Đang đồng bộ lịch học từ Google Calendar...';
+
+    try {
+      const url = API_URL + '?weekOffset=' + encodeURIComponent(weekOffset);
+      const res = await fetch(url, { method: 'GET', credentials: 'omit' });
+      const data = await res.json();
+
+      if (!data.ok) throw new Error(data.error || 'Không đọc được dữ liệu lịch');
+
+      currentData = data;
+      document.getElementById('weekLabel').textContent = data.weekRange;
+      render(data);
+    } catch (err) {
+      area.className = 'status-box';
+      area.innerHTML = '⚠️ Lỗi kết nối: ' + escapeHtml(err.message) +
+        '<br><button class="btn" style="margin-top:10px" onclick="loadWeek()">🔄 Thử lại</button>';
+    }
+  }
+
+  async function toggleTask(dIdx, tIdx) {
+    const day = currentData.days[dIdx];
+    const task = day.tasks[tIdx];
+    if (!task) return;
+
+    const newDone = !task.done;
+    const itemEl = document.getElementById(`task-${dIdx}-${tIdx}`);
+    if (itemEl) itemEl.classList.add('syncing');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        credentials: 'omit',
+        body: JSON.stringify({
+          eventId: task.id,
+          startMs: task.startMs,
+          markDone: newDone
+        })
+      });
+      const result = await res.json();
+      if (!result.ok) throw new Error(result.error || 'Lưu thất bại');
+
+      task.done = newDone;
+      render(currentData);
+      if (newDone) {
+        const allDayDone = day.tasks.every(t => t.done);
+        showToast(allDayDone ? `🏆 Xuất sắc! Sori đã xong hết bài ${day.name}!` : '⭐ Giỏi lắm! Đã đồng bộ lên Google Calendar!');
+      } else {
+        showToast('↩️ Đã bỏ đánh dấu hoàn thành');
+      }
+    } catch (err) {
+      if (itemEl) itemEl.classList.remove('syncing');
+      showToast('⚠️ Lỗi lưu lịch: ' + err.message);
+    }
+  }
+
+  function extractFirstUrl(text) {
+    if (!text) return '';
+    const m = text.match(/https?:\/\/[^\s"<'>]+/i);
+    return m ? m[0] : '';
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  function render(data) {
+    const area = document.getElementById('contentArea');
+    let total = 0;
+    let done = 0;
+
+    area.className = 'grid';
+    area.innerHTML = data.days.map((day, dIdx) => {
+      const dayTotal = day.tasks.length;
+      const dayDone = day.tasks.filter(t => t.done).length;
+      total += dayTotal;
+      done += dayDone;
+
+      const isAllDone = dayTotal > 0 && dayDone === dayTotal;
+
+      const tasksHtml = dayTotal === 0
+        ? '<div class="empty-note">Không có lịch học</div>'
+        : day.tasks.map((t, tIdx) => {
+            const url = extractFirstUrl(t.description);
+            return `
+              <li class="task-item ${t.done ? 'done' : ''}" id="task-${dIdx}-${tIdx}" onclick="toggleTask(${dIdx}, ${tIdx})">
+                <div class="checkbox">${t.done ? '✓' : ''}</div>
+                <div class="task-content">
+                  <span class="task-time">${escapeHtml(t.time)}</span>
+                  <div class="task-text">${escapeHtml(t.title)}</div>
+                  ${url ? `<a class="task-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🔗 Mở bài học</a>` : ''}
+                </div>
+              </li>
+            `;
+          }).join('');
+
+      return `
+        <div class="day-card ${day.isToday ? 'today' : ''} ${isAllDone ? 'all-done' : ''}">
+          <div class="day-header">
+            <div class="day-title">
+              ${day.name} <span class="day-date">(${day.shortDate})</span>
+              ${day.isToday ? '<span class="today-pill">Hôm nay</span>' : ''}
+            </div>
+            <div class="day-count">${isAllDone ? '🌟 Xong!' : (dayTotal > 0 ? `${dayDone}/${dayTotal}` : '')}</div>
+          </div>
+          <ul class="task-list">${tasksHtml}</ul>
+        </div>
+      `;
+    }).join('');
+
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('starBadge').textContent = `⭐ ${done} / ${total} hoàn thành (${pct}%)`;
+  }
+
+  loadWeek();
+</script>
+</body>
+</html>
